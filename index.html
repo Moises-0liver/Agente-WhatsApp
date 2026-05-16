@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurar Agente WhatsApp IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --green:#00E676;
+  --green-glow:rgba(0,230,118,0.18);
+  --green-dim:rgba(0,230,118,0.07);
+  --green-dim2:rgba(0,230,118,0.12);
+  --green-border:rgba(0,230,118,0.22);
+  --dark:#060606;
+  --surface:#0b0b0b;
+  --card:#111;
+  --card2:#161616;
+  --card-hover:#1a1a1a;
+  --border:#1a1a1a;
+  --border2:#232323;
+  --border3:#2e2e2e;
+  --text:#F0F0F0;
+  --muted:#3e3e3e;
+  --muted2:#6a6a6a;
+  --muted3:#999;
+  --red:#FF4D4D;
+  --red-dim:rgba(255,77,77,0.08);
+  --red-border:rgba(255,77,77,0.2);
+  --amber:#F59E0B;
+  --amber-dim:rgba(245,158,11,0.08);
+  --blue:#3B82F6;
+  --radius:10px;
+  --radius-sm:7px;
+}
+
+html{scroll-behavior:smooth}
+
+body {
+  font-family:'Outfit',sans-serif;
+  background:var(--dark);
+  color:var(--text);
+  min-height:100vh;
+  padding:2rem 1rem 6rem;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ── Animated BG ─────────────────────────── */
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,230,118,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(0,100,50,0.04) 0%, transparent 50%);
+  pointer-events:none;z-index:0;
+}
+body::after {
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.6;
+}
+
+.container{max-width:540px;margin:0 auto;position:relative;z-index:1}
+
+/* ── Brand ───────────────────────────────── */
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:2.5rem}
+.brand-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--green);flex-shrink:0;
+  box-shadow:0 0 8px rgba(0,230,118,0.5);
+  animation:pulse 2.8s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
+.brand-text{font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--green)}
+
+/* ── Hero ────────────────────────────────── */
+.page-title{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:800;line-height:1.18;margin-bottom:.55rem;letter-spacing:.02em}
+.page-title em{font-style:normal;color:var(--green)}
+.page-sub{font-size:13.5px;color:var(--muted2);line-height:1.8;margin-bottom:2.5rem;max-width:420px}
+
+/* ── Progress ────────────────────────────── */
+.progress-wrap{margin-bottom:2.5rem}
+.progress-bar{display:flex;align-items:center;position:relative;margin-bottom:.6rem}
+.prog-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;cursor:default}
+.prog-line{position:absolute;top:13px;left:50%;right:-50%;height:1px;background:var(--border2);z-index:0;transition:background .4s}
+.prog-step:last-child .prog-line{display:none}
+.prog-step.done .prog-line,.prog-step.active .prog-line{background:var(--green-border)}
+.prog-circle{
+  width:26px;height:26px;border-radius:50%;
+  border:1.5px solid var(--border2);background:var(--card);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9.5px;font-weight:700;color:var(--muted2);
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  z-index:2;position:relative;font-family:'Outfit',sans-serif;
+}
+.prog-step.done .prog-circle{background:var(--green);border-color:var(--green);color:#000;box-shadow:0 0 6px rgba(0,230,118,.2)}
+.prog-step.active .prog-circle{border-color:var(--green);color:var(--green);background:var(--green-dim);box-shadow:0 0 0 4px rgba(0,230,118,.08)}
+.prog-label{font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:.04em;text-align:center;transition:color .3s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:54px}
+.prog-step.active .prog-label{color:var(--green)}
+.prog-step.done .prog-label{color:var(--muted2)}
+
+/* ── Steps ───────────────────────────────── */
+.step{display:none;animation:fadeUp .35s cubic-bezier(.4,0,.2,1)}
+.step.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.step-eyebrow{font-size:11px;font-weight:600;color:var(--green);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.4rem}
+.step-title{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;margin-bottom:.35rem;letter-spacing:.03em}
+.step-desc{font-size:13px;color:var(--muted2);line-height:1.7;margin-bottom:1.6rem}
+
+/* ── Fields ──────────────────────────────── */
+.field{margin-bottom:1.1rem}
+label{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;color:var(--muted3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
+.hint{font-size:10px;font-weight:400;color:var(--muted2);text-transform:none;letter-spacing:0}
+.badge-optional{font-size:9px;font-weight:500;background:var(--card2);border:1px solid var(--border3);color:var(--muted2);padding:1px 6px;border-radius:4px;text-transform:none;letter-spacing:0}
+
+input,textarea,select{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border2);
+  backdrop-filter:blur(4px);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;font-size:14px;
+  transition:border-color .2s,background .2s,box-shadow .2s;
+  outline:none;
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--green);
+  background:rgba(0,230,118,.04);
+  box-shadow:0 0 0 3px rgba(0,230,118,.08);
+}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+textarea{resize:vertical;min-height:90px;line-height:1.65}
+.section-divider{border:none;border-top:1px solid var(--border);margin:1.4rem 0}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+
+/* ── Custom Select ───────────────────────── */
+.custom-select-wrap{position:relative}
+.custom-select-wrap select{
+  cursor:pointer;
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' stroke='%23555' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;
+  padding-right:36px;
+}
+.custom-select-wrap select:focus{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' stroke='%2300E676' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+}
+.custom-select-wrap select option{background:#111;color:var(--text)}
+
+/* ── Tip box ─────────────────────────────── */
+.tip{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.14);
+  border-radius:var(--radius-sm);padding:11px 14px;
+  font-size:13px;color:var(--muted3);line-height:1.65;margin-bottom:1.1rem;
+}
+.tip-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.tip strong{color:var(--green)}
+
+/* ── WhatsApp field ──────────────────────── */
+.wpp-box{
+  background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.18);
+  border-radius:var(--radius-sm);padding:12px 14px;
+  font-size:12.5px;color:var(--muted3);line-height:1.7;margin-bottom:10px;
+}
+.wpp-box strong{color:var(--amber)}
+.wpp-box code{
+  font-family:monospace;font-size:12px;
+  background:rgba(245,158,11,.1);padding:1px 6px;border-radius:4px;color:var(--amber);
+}
+.wpp-preview{
+  font-size:12px;color:var(--muted2);margin-top:5px;display:flex;align-items:center;gap:7px;
+}
+.wpp-preview-val{
+  font-family:monospace;color:var(--green);font-size:13px;font-weight:600;
+  letter-spacing:.04em;
+}
+.wpp-status{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s}
+.wpp-status.ok{background:var(--green);box-shadow:0 0 4px rgba(0,230,118,.3)}
+.wpp-status.warn{background:var(--amber)}
+
+/* ── Price input (amber) ─────────────────── */
+#prod-preco{
+  border-color:rgba(245,158,11,.35);
+  background:rgba(245,158,11,.04);
+  color:var(--amber);
+}
+#prod-preco:focus{
+  border-color:var(--amber);
+  background:rgba(245,158,11,.07);
+  box-shadow:0 0 0 3px rgba(245,158,11,.1);
+}
+#prod-preco::placeholder{color:rgba(245,158,11,.4)}
+
+/* ── Product name input (amber tint) ────── */
+#prod-nome{
+  border-color:rgba(245,158,11,.25);
+  background:rgba(245,158,11,.025);
+}
+#prod-nome:focus{
+  border-color:var(--amber);
+  background:rgba(245,158,11,.05);
+  box-shadow:0 0 0 3px rgba(245,158,11,.08);
+}
+
+/* ── Payment toggles ─────────────────────── */
+.payment-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px}
+.pay-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 13px;border-radius:20px;
+  border:1px solid rgba(245,158,11,.4);background:rgba(245,158,11,.04);
+  font-size:13px;color:var(--amber);cursor:pointer;
+  transition:all .18s cubic-bezier(.4,0,.2,1);user-select:none;
+  font-family:'Outfit',sans-serif;font-weight:400;
+  backdrop-filter:blur(4px);
+}
+.pay-btn:hover{border-color:rgba(245,158,11,.65);background:rgba(245,158,11,.08)}
+/* quando há pelo menos uma seleção, os não-selecionados ficam cinza */
+.payment-grid.has-selection .pay-btn:not(.selected){
+  border-color:var(--border2);
+  background:rgba(255,255,255,.02);
+  color:var(--muted2);
+}
+.payment-grid.has-selection .pay-btn:not(.selected):hover{
+  border-color:var(--border3);
+  color:var(--muted3);
+  background:rgba(255,255,255,.04);
+}
+.pay-btn.selected{border-color:var(--green);color:var(--green);background:rgba(0,230,118,.09);font-weight:500}
+.pay-btn.selected .pay-check{opacity:1;transform:scale(1)}
+.pay-check{font-size:10px;opacity:0;transform:scale(.5);transition:all .15s}
+#pagamento-outro-wrap{margin-top:8px;display:none}
+
+/* ── Tone grid ───────────────────────────── */
+.tone-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.tone-opt{
+  padding:13px 14px;border-radius:var(--radius-sm);
+  border:1px solid var(--border2);background:rgba(255,255,255,.02);
+  cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);
+  position:relative;overflow:hidden;backdrop-filter:blur(4px);
+}
+.tone-opt::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top left,rgba(0,230,118,.06),transparent 70%);
+  opacity:0;transition:opacity .25s;
+}
+.tone-opt:hover::before{opacity:1}
+.tone-opt:hover{border-color:var(--border3);background:rgba(255,255,255,.04)}
+.tone-opt.selected{border-color:var(--green);background:rgba(0,230,118,.07)}
+.tone-opt.selected::before{opacity:1}
+.tone-opt.selected::after{
+  content:'✓';position:absolute;top:8px;right:10px;
+  font-size:10px;color:var(--green);font-weight:700;
+}
+.tone-name{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:3px}
+.tone-sub{font-size:11px;color:var(--muted2)}
+
+/* ── Trait chips ─────────────────────────── */
+.tone-traits-wrap{
+  margin-top:12px;padding:12px 14px;
+  background:rgba(0,230,118,.03);border:1px solid rgba(0,230,118,.1);
+  border-radius:var(--radius-sm);
+  animation:fadeUp .25s ease;
+}
+.tone-traits-label{font-size:10.5px;color:var(--muted2);margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.tone-traits{display:flex;flex-wrap:wrap;gap:6px}
+.trait-chip{
+  padding:5px 11px;border-radius:20px;
+  border:1px solid var(--border2);background:rgba(255,255,255,.02);
+  font-size:12px;color:var(--muted2);cursor:pointer;
+  transition:all .15s;user-select:none;
+}
+.trait-chip:hover{border-color:var(--border3);color:var(--muted3)}
+.trait-chip.selected{border-color:var(--green);color:var(--green);background:rgba(0,230,118,.07);font-weight:500}
+
+/* ── Chips ───────────────────────────────── */
+.chips-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 11px;border-radius:20px;
+  border:1px solid var(--border2);background:rgba(255,255,255,.02);
+  font-size:12px;color:var(--muted2);cursor:pointer;
+  transition:all .15s cubic-bezier(.4,0,.2,1);user-select:none;
+  backdrop-filter:blur(4px);
+}
+.chip:hover{border-color:var(--border3);color:var(--muted3);background:rgba(255,255,255,.04)}
+.chip.selected{border-color:var(--green);color:var(--green);background:rgba(0,230,118,.07);font-weight:500}
+.chip.selected::before{content:'✓ ';font-size:10px}
+.chips-hint{font-size:11px;color:var(--muted2);margin-top:5px}
+.chips-label{font-size:10.5px;font-weight:600;color:var(--muted3);margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase;display:block}
+.field-sub-label{font-size:11px;font-weight:600;color:var(--muted);margin-top:12px;margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+
+/* ── Product builder ─────────────────────── */
+.product-input-row{display:grid;grid-template-columns:1fr 100px 38px;gap:7px;margin-bottom:7px;align-items:center}
+.btn-add-product{
+  background:var(--amber);color:#000;border:none;border-radius:var(--radius-sm);
+  font-size:20px;font-weight:700;cursor:pointer;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s,transform .1s,box-shadow .15s;
+  box-shadow:0 0 10px rgba(245,158,11,.18);
+}
+.btn-add-product:hover{background:#fbbf24;box-shadow:0 0 16px rgba(245,158,11,.3)}
+.btn-add-product:active{transform:scale(.93)}
+.product-list{display:flex;flex-direction:column;gap:5px;margin-bottom:7px}
+.product-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;
+  background:rgba(0,230,118,.04);
+  border:1px solid rgba(0,230,118,.18);
+  border-radius:var(--radius-sm);
+  font-size:13px;animation:fadeUp .15s ease;
+  box-shadow:0 0 8px rgba(0,230,118,.06);
+}
+.product-item-name{color:var(--green);flex:1}
+.product-item-price{color:var(--green);font-weight:600;margin:0 12px;white-space:nowrap;font-size:13.5px;opacity:.85}
+
+/* inputs ficam cinza/opcional após ter produtos */
+#prod-input-section.products-filled label{
+  color:var(--muted) !important;
+}
+#prod-input-section.products-filled #prod-nome,
+#prod-input-section.products-filled #prod-preco{
+  border-color:var(--border2);
+  background:rgba(255,255,255,.03);
+  color:var(--muted3);
+}
+#prod-input-section.products-filled #prod-nome:focus,
+#prod-input-section.products-filled #prod-preco:focus{
+  border-color:var(--green);
+  background:rgba(0,230,118,.04);
+  box-shadow:0 0 0 3px rgba(0,230,118,.08);
+  color:var(--text);
+}
+#prod-input-section.products-filled #prod-preco::placeholder,
+#prod-input-section.products-filled #prod-nome::placeholder{color:var(--muted)}
+#prod-input-section.products-filled .btn-add-product{
+  background:var(--border3);
+  box-shadow:none;
+  color:var(--muted2);
+}
+#prod-input-section.products-filled .btn-add-product:hover{
+  background:var(--border3);
+  box-shadow:none;
+  opacity:.85;
+}
+.product-item-del{
+  background:none;border:none;cursor:pointer;color:var(--muted);
+  font-size:17px;padding:2px 4px;border-radius:4px;
+  transition:color .15s,background .15s;line-height:1;
+}
+.product-item-del:hover{color:var(--red);background:var(--red-dim)}
+.product-count{font-size:11px;color:var(--muted2);margin-bottom:5px}
+.product-manual-toggle{font-size:12px;color:var(--muted2);cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-top:4px;text-decoration:underline;text-underline-offset:2px;transition:color .15s}
+.product-manual-toggle:hover{color:var(--muted3)}
+
+/* ── Check items (situacoes) ─────────────── */
+.check-list{display:flex;flex-direction:column;gap:5px}
+.check-item{
+  display:flex;align-items:flex-start;gap:11px;
+  padding:11px 13px;border-radius:var(--radius-sm);
+  border:1px solid var(--border2);background:rgba(255,255,255,.02);
+  cursor:pointer;transition:all .18s;user-select:none;
+}
+.check-item:hover{border-color:var(--border3);background:rgba(255,255,255,.04)}
+.check-item.checked{border-color:var(--green);background:rgba(0,230,118,.06)}
+.cb{
+  width:16px;height:16px;border-radius:4px;flex-shrink:0;
+  border:1.5px solid var(--border3);background:var(--card);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--green);font-weight:700;
+  transition:all .15s;margin-top:1px;
+}
+.check-item.checked .cb{background:var(--green);border-color:var(--green);color:#000}
+.check-title{font-size:13.5px;font-weight:600;color:var(--text)}
+.check-sub{font-size:12px;color:var(--muted2);line-height:1.55}
+
+/* ── Plan grid ───────────────────────────── */
+.plan-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1rem}
+.plan-card{
+  padding:14px 12px;border-radius:var(--radius);
+  border:1.5px solid var(--border2);background:rgba(255,255,255,.02);
+  cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1);
+  text-align:center;position:relative;overflow:hidden;
+  backdrop-filter:blur(6px);
+}
+.plan-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top,rgba(0,230,118,.06),transparent 70%);
+  opacity:0;transition:opacity .25s;
+}
+.plan-card:hover::before{opacity:1}
+.plan-card:hover{border-color:var(--border3)}
+.plan-card.selected{border-color:var(--green);background:rgba(0,230,118,.07)}
+.plan-card.selected::before{opacity:1}
+.plan-popular{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  background:var(--green);color:#000;font-size:8.5px;font-weight:700;
+  padding:2px 8px;border-radius:0 0 5px 5px;letter-spacing:.08em;text-transform:uppercase;
+}
+.plan-name{font-size:11.5px;font-weight:700;color:var(--muted3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.plan-price{font-family:'Orbitron',sans-serif;font-size:17px;font-weight:800;color:var(--text);margin-bottom:2px}
+.plan-price span{font-size:11px;font-weight:400;color:var(--muted2)}
+.plan-check{font-size:9px;color:var(--muted2);margin-top:4px;line-height:1.6}
+
+/* ── Handoff ─────────────────────────────── */
+.locked-field{position:relative;overflow:hidden;opacity:.5;pointer-events:none}
+.lock-badge{display:inline-flex;align-items:center;gap:5px;background:var(--red-dim);border:1px solid var(--red-border);color:#ff7070;font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:4px;letter-spacing:.06em;text-transform:uppercase;margin-left:auto}
+.lock-hint{font-size:11.5px;color:#ff7070;margin-top:5px;display:none;line-height:1.5}
+.lock-hint.visible{display:block}
+
+/* ── Fechar notice ───────────────────────── */
+.fechar-notice{margin-top:6px;font-size:11.5px;color:var(--amber);line-height:1.5;display:none;background:var(--amber-dim);border:1px solid rgba(245,158,11,.18);border-radius:6px;padding:8px 11px}
+.fechar-notice.visible{display:block}
+
+/* ── Nav ─────────────────────────────────── */
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+.nav-meta{font-size:12px;color:var(--muted)}
+.btn{
+  padding:11px 22px;border-radius:var(--radius-sm);
+  font-size:14px;font-weight:600;cursor:pointer;transition:all .18s;
+  font-family:'Outfit',sans-serif;letter-spacing:.01em;
+  display:inline-flex;align-items:center;gap:7px;
+  position:relative;overflow:hidden;
+}
+.btn-primary{
+  background:var(--green);color:#000;border:none;
+  box-shadow:0 0 14px rgba(0,230,118,.12);
+}
+.btn-primary:hover{background:#1aeb82;box-shadow:0 0 20px rgba(0,230,118,.2);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0);box-shadow:0 0 12px rgba(0,230,118,.15)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
+.btn-ghost{background:rgba(255,255,255,.03);border:1px solid var(--border2);color:var(--muted2);backdrop-filter:blur(4px)}
+.btn-ghost:hover{border-color:var(--border3);color:var(--muted3);background:rgba(255,255,255,.05)}
+
+/* ── Spinner ─────────────────────────────── */
+.spinner{width:15px;height:15px;border:2px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.btn-primary.loading .spinner{display:block}
+.btn-primary.loading .btn-text{opacity:.6}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Error / toast ───────────────────────── */
+.error-msg{display:none;color:var(--red);font-size:13px;margin-top:.75rem;text-align:center;background:var(--red-dim);border:1px solid var(--red-border);border-radius:var(--radius-sm);padding:10px 14px}
+.inline-alert{background:var(--red-dim);border:1px solid var(--red-border);color:#ff7070;font-size:12.5px;padding:9px 14px;border-radius:var(--radius-sm);margin-top:12px;animation:fadeUp .2s ease}
+
+/* ── Success ─────────────────────────────── */
+.success{text-align:center;padding:2.5rem 0 1.5rem;animation:fadeUp .4s cubic-bezier(.4,0,.2,1)}
+.success-ring{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--green-dim);border:1px solid var(--green-border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.5rem;font-size:32px;
+  box-shadow:0 0 24px rgba(0,230,118,.1);
+  animation:ringPop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes ringPop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.success-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:800;margin-bottom:.6rem;letter-spacing:.03em}
+.success-desc{font-size:13.5px;color:var(--muted2);line-height:1.8;margin-bottom:2rem;max-width:360px;margin-left:auto;margin-right:auto}
+.resumo-card{background:rgba(255,255,255,.02);border:1px solid var(--border2);border-radius:var(--radius);padding:1.25rem 1.5rem;text-align:left;margin-bottom:1.5rem;backdrop-filter:blur(6px)}
+.resumo-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted2);padding:4px 0}
+.resumo-row+.resumo-row{border-top:1px solid var(--border);margin-top:4px;padding-top:8px}
+.resumo-row strong{color:var(--text);font-weight:500}
+.resumo-row .ri{width:18px;text-align:center}
+.next-steps{background:var(--green-dim);border:1px solid var(--green-border);border-radius:var(--radius-sm);padding:1rem 1.25rem;font-size:12.5px;color:var(--muted2);text-align:left;line-height:1.9}
+.next-steps strong{color:var(--green);display:block;margin-bottom:4px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ── Retry button ────────────────────────── */
+.btn-retry{
+  background:none;border:1px solid var(--border2);color:var(--muted3);
+  padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;
+  cursor:pointer;transition:all .15s;margin-top:8px;display:inline-flex;align-items:center;gap:6px;
+  font-family:'Outfit',sans-serif;
+}
+.btn-retry:hover{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+
+/* ── Field validation states ─────────────── */
+.field.f-pending > label,
+.field.f-pending > .field-label { color: var(--amber) !important; }
+.field.f-pending input:not(:focus),
+.field.f-pending select:not(:focus),
+.field.f-pending textarea:not(:focus) {
+  border-color: rgba(245,158,11,.38);
+}
+.field.f-done > label,
+.field.f-done > .field-label { color: var(--green) !important; }
+.field.f-done input:not(:focus),
+.field.f-done select:not(:focus),
+.field.f-done textarea:not(:focus) {
+  border-color: rgba(0,230,118,.35);
+}
+/* Button pending state */
+.btn-primary.btn-pending {
+  background: var(--amber) !important;
+  box-shadow: 0 0 22px rgba(245,158,11,.22) !important;
+}
+.btn-primary.btn-pending:hover {
+  background: #f0a008 !important;
+  box-shadow: 0 0 30px rgba(245,158,11,.32) !important;
+}
+
+/* ── Autocomplete ─────────────────────────── */
+.ac-wrap { position: relative; }
+.ac-list {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: #161616; border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); z-index: 300;
+  overflow: hidden; display: none;
+  box-shadow: 0 10px 28px rgba(0,0,0,.5);
+  max-height: 220px; overflow-y: auto;
+}
+.ac-list.open { display: block; }
+.ac-item {
+  padding: 9px 13px; font-size: 13px; cursor: pointer;
+  color: var(--muted2); border-bottom: 1px solid var(--border);
+  transition: background .12s, color .12s; display: flex;
+  justify-content: space-between; align-items: center;
+}
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover, .ac-item.focused { background: #1e1e1e; color: var(--text); }
+.ac-item .ac-uf { font-size: 11px; color: var(--muted); font-weight: 600; }
+.ac-loading { padding: 10px 13px; font-size: 12px; color: var(--muted2); }
+
+/* ── Segmento Outro ──────────────────────── */
+#segmento-outro-wrap { margin-top: 8px; display: none; }
+
+/* ── CEP field ───────────────────────────── */
+.cep-row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; align-items: start; }
+.cep-status { font-size: 11px; margin-top: 5px; }
+
+/* ── Schedule builder ────────────────────── */
+.sched-wrap { display: flex; flex-direction: column; gap: 10px; }
+.sched-group {
+  background: rgba(255,255,255,.02); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); padding: 13px 14px;
+  display: flex; flex-direction: column; gap: 10px;
+  position: relative;
+}
+.sched-group.sg-done { border-color: rgba(0,230,118,.3); }
+.sched-days { display: flex; flex-wrap: wrap; gap: 5px; }
+.sd {
+  padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border2); background: rgba(255,255,255,.02);
+  color: var(--muted2); cursor: pointer; transition: all .15s;
+  font-family: 'Outfit', sans-serif;
+}
+.sd:hover { border-color: var(--border3); color: var(--muted3); }
+.sd.active { border-color: var(--green); color: var(--green); background: rgba(0,230,118,.08); }
+.sched-shift { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.shift-lbl { font-size: 11.5px; color: var(--muted2); white-space: nowrap; }
+.shift-t {
+  width: 90px !important; padding: 7px 10px !important;
+  font-size: 13px !important; text-align: center;
+}
+.btn-break {
+  font-size: 11.5px; color: var(--muted2); background: none;
+  border: 1px dashed var(--border2); border-radius: 20px;
+  padding: 4px 10px; cursor: pointer; transition: all .15s;
+  font-family: 'Outfit', sans-serif;
+}
+.btn-break:hover { border-color: var(--green); color: var(--green); }
+.btn-rm { font-size: 14px; color: var(--muted); background: none; border: none; cursor: pointer; padding: 2px 5px; transition: color .15s; line-height: 1; }
+.btn-rm:hover { color: var(--red); }
+.sched-preview-text {
+  font-size: 12px; color: var(--muted2); margin-top: 4px;
+  padding: 7px 10px; background: rgba(0,230,118,.04);
+  border: 1px solid rgba(0,230,118,.1); border-radius: 6px;
+  display: none;
+}
+.sched-preview-text.visible { display: block; }
+.sched-preview-text strong { color: var(--green); }
+.btn-sched-add {
+  align-self: flex-start; font-size: 12px; color: var(--muted2);
+  background: none; border: 1px dashed var(--border2); border-radius: 20px;
+  padding: 6px 14px; cursor: pointer; transition: all .15s;
+  font-family: 'Outfit', sans-serif;
+}
+.btn-sched-add:hover { border-color: var(--green); color: var(--green); }
+.btn-sched-del {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 12px; color: var(--muted); background: none; border: none;
+  cursor: pointer; transition: color .15s;
+}
+.btn-sched-del:hover { color: var(--red); }
+
+/* ── Responsive ──────────────────────────── */
+@media(max-width:480px){
+  body{padding:1.5rem .85rem 5rem}
+  .page-title{font-size:25px}
+  .field-row{grid-template-columns:1fr}
+  .cep-row{grid-template-columns:1fr}
+  .plan-grid{grid-template-columns:1fr}
+  .tone-grid{grid-template-columns:1fr}
+  .prog-label{display:none}
+  .prog-circle{width:22px;height:22px;font-size:9px}
+  .product-input-row{grid-template-columns:1fr 90px 38px}
+  .shift-t{width:80px !important}
+}
+
+/* ── Feature list (step 7) ───────────────── */
+.plan-notice{
+  background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.18);
+  border-radius:var(--radius-sm);padding:11px 15px;
+  font-size:12.5px;color:var(--muted2);line-height:1.7;
+  margin-bottom:1.4rem;
+}
+.plan-notice strong{color:var(--green)}
+.feature-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.4rem}
+.feature-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border2);
+  border-radius:var(--radius-sm);
+  font-size:13.5px;color:var(--text);
+}
+.feature-icon{font-size:16px;flex-shrink:0;width:22px;text-align:center}
+.feature-text strong{display:block;font-weight:600;font-size:13px;color:var(--text)}
+.feature-text span{font-size:11.5px;color:var(--muted2)}
+.feature-check{
+  margin-left:auto;flex-shrink:0;
+  width:18px;height:18px;border-radius:50%;
+  background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--green);font-weight:700;
+}
+
+/* ── Success next-steps ──────────────────── */
+.next-steps ol{padding-left:18px;margin-top:6px}
+.next-steps li{margin-bottom:6px;line-height:1.65}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="brand">
+  <div class="brand-dot"></div>
+  <div class="brand-text">Agente WhatsApp IA</div>
+</div>
+
+<div class="page-title">Configure seu <em>agente</em><br>de atendimento</div>
+<div class="page-sub">Preencha as informações do seu negócio. Em menos de 10 minutos seu agente estará pronto para atender 24h por dia.</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar" id="progress-bar"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PASSO 1: Identidade -->
+<!-- ══════════════════════════════════════════ -->
+<div class="step active" id="s1">
+  <div class="step-eyebrow">Passo 1 de 7</div>
+  <div class="step-title">Identidade da empresa</div>
+  <div class="step-desc">Como sua empresa se apresenta para os clientes.</div>
+
+  <div class="field" id="f-nome">
+    <label>Nome da empresa</label>
+    <input id="nome" placeholder="Ex: Restaurante Sabor da Hora" autocomplete="organization" oninput="onField('nome')"/>
+  </div>
+
+  <div class="field-row">
+    <div class="field" id="f-segmento">
+      <label>Segmento</label>
+      <div class="custom-select-wrap">
+        <select id="segmento" onchange="onSegmento(this)">
+          <option value="">Selecionar...</option>
+          <option>Restaurante / Lanchonete</option>
+          <option>Loja de Calçados</option>
+          <option>Loja de Roupas / Moda</option>
+          <option>Clínica / Saúde</option>
+          <option>Clínica de Estética / Beleza</option>
+          <option>Barbearia</option>
+          <option>Academia / Personal</option>
+          <option>Prestador de Serviços</option>
+          <option>Imobiliária</option>
+          <option>Pet Shop</option>
+          <option>Farmácia</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div id="segmento-outro-wrap">
+        <input id="segmento-outro" placeholder="Descreva seu segmento..." oninput="onField('segmento-outro')"/>
+      </div>
+    </div>
+    <div class="field" id="f-cidade">
+      <label>Cidade / Estado</label>
+      <div class="ac-wrap">
+        <input id="cidade" placeholder="Ex: Joinville, SC" autocomplete="off"
+          oninput="onCidadeInput(this.value)" onblur="closeAc('ac-cidade')" onfocus="onCidadeInput(this.value)"/>
+        <div class="ac-list" id="ac-cidade"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field" id="f-descricao">
+    <label>Descrição da empresa <span class="hint">seja específico</span></label>
+    <textarea id="descricao" placeholder="O que faz, como funciona, o que torna diferente dos concorrentes. Ex: Lanchonete com entrega própria, feito na hora — sem aplicativo, direto pelo WhatsApp." oninput="onField('descricao')"></textarea>
+  </div>
+
+  <div class="field">
+    <label>Diferencial principal <span class="badge-optional">Opcional</span></label>
+    <input id="diferencial" placeholder="Ex: Feito na hora, não aquecido. 30 anos de tradição."/>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Endereço com CEP -->
+  <div class="field">
+    <label>Endereço <span class="badge-optional">Opcional</span></label>
+    <div class="cep-row">
+      <div class="ac-wrap">
+        <input id="cep" placeholder="CEP (ex: 89200-000)" maxlength="9"
+          oninput="onCepInput(this)" autocomplete="postal-code"/>
+        <div class="cep-status" id="cep-status"></div>
+      </div>
+      <input id="endereco" placeholder="Rua, número — Bairro, Cidade" autocomplete="street-address"/>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- WhatsApp -->
+  <div class="field" id="f-whatsapp">
+    <label>WhatsApp da empresa <span class="hint">número que vai receber as mensagens</span></label>
+    <div class="wpp-box">
+      <strong>📱 Como digitar:</strong> DDD + número, sem o 55, sem hífen.<br>
+      Celular: <code>47988887777</code> → salvo como <code>5547988887777</code> ✓<br>
+      Fixo/sem 9: <code>9288887777</code> → salvo como <code>559288887777</code> ✓<br>
+      <strong>🔑 Este formato ativa o código de pareamento</strong> — sem precisar escanear QR Code.
+    </div>
+    <input id="whatsapp_raw" type="tel" placeholder="Ex: 47988887777 (sem 55, sem hífen)" oninput="formatWhatsapp(this)" autocomplete="tel"/>
+    <div class="wpp-preview">
+      <span class="wpp-status" id="wpp-status"></span>
+      <span>Formato salvo:</span>
+      <span class="wpp-preview-val" id="whatsapp_preview">—</span>
+      <span id="wpp-digits" style="font-size:11px;color:var(--muted2)"></span>
+    </div>
+  </div>
+
+  <div class="field" id="f-dono-whatsapp">
+    <label>Seu WhatsApp pessoal (dono) <span class="hint">para receber alertas de venda</span></label>
+    <div class="wpp-box">
+      <strong>🔔 Notificações:</strong> Este número recebe um aviso toda vez que o agente fechar uma venda ou agendamento.<br>
+      Mesmo formato: DDD + número, sem o 55, sem hífen. Ex: <code>47988887777</code>
+    </div>
+    <input id="dono_whatsapp_raw" type="tel" placeholder="Ex: 47988887777 (seu número pessoal)" oninput="formatDono(this)" autocomplete="tel"/>
+    <div class="wpp-preview">
+      <span class="wpp-status" id="dono-status"></span>
+      <span>Formato salvo:</span>
+      <span class="wpp-preview-val" id="dono_preview">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PASSO 2: Horários -->
+<!-- ══════════════════════════════════════════ -->
+<div class="step" id="s2">
+  <div class="step-eyebrow">Passo 2 de 7</div>
+  <div class="step-title">Horários e localização</div>
+  <div class="step-desc">O agente vai usar isso para responder sobre disponibilidade e onde encontrar vocês.</div>
+
+  <div class="field" id="f-horarios">
+    <label>Horário de atendimento</label>
+    <input type="hidden" id="horarios"/>
+    <div class="sched-wrap" id="sched-wrap"></div>
+    <button type="button" class="btn-sched-add" onclick="addSchedGroup()" style="margin-top:4px">+ Adicionar outro horário</button>
+    <div class="sched-preview-text" id="sched-preview"></div>
+  </div>
+
+  <div class="field-row" style="margin-top:1rem">
+    <div class="field">
+      <label>Faz entregas?</label>
+      <div class="custom-select-wrap">
+        <select id="entrega" onchange="toggleEntrega(this)">
+          <option value="nao">Não faz entrega</option>
+          <option value="sim">Sim, faz entrega</option>
+          <option value="retirada">Só retirada no local</option>
+          <option value="ambos">Entrega e retirada</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Taxa / raio de entrega <span class="badge-optional">Opcional</span></label>
+      <input id="entrega_info" placeholder="Ex: Grátis até 3km, R$5 além"/>
+    </div>
+  </div>
+
+  <div class="field" id="f-pagamento">
+    <label>Formas de pagamento</label>
+    <div class="payment-grid" id="payment-grid">
+      <button type="button" class="pay-btn" data-pay="PIX" onclick="togglePay(this)">
+        <span class="pay-check">✓</span>⚡ PIX
+      </button>
+      <button type="button" class="pay-btn" data-pay="Cartão de crédito" onclick="togglePay(this)">
+        <span class="pay-check">✓</span>💳 Cartão crédito
+      </button>
+      <button type="button" class="pay-btn" data-pay="Cartão de débito" onclick="togglePay(this)">
+        <span class="pay-check">✓</span>💳 Cartão débito
+      </button>
+      <button type="button" class="pay-btn" data-pay="Dinheiro" onclick="togglePay(this)">
+        <span class="pay-check">✓</span>💵 Dinheiro
+      </button>
+      <button type="button" class="pay-btn" data-pay="Boleto" onclick="togglePay(this)">
+        <span class="pay-check">✓</span>🧾 Boleto
+      </button>
+      <button type="button" class="pay-btn" data-pay="outro" onclick="togglePayOutro(this)">
+        <span class="pay-check">✓</span>➕ Outro
+      </button>
+    </div>
+    <div id="pagamento-outro-wrap">
+      <input id="pagamento-outro" placeholder="Descreva a outra forma de pagamento..."/>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PASSO 3: Produtos -->
+<!-- ══════════════════════════════════════════ -->
+<div class="step" id="s3">
+  <div class="step-eyebrow">Passo 3 de 7</div>
+  <div class="step-title">Produtos e serviços</div>
+  <div class="step-desc">Liste tudo com preços. Quanto mais completo, mais preciso o agente responde — e menos ele inventa.</div>
+
+  <div class="tip">
+    <span class="tip-icon">💡</span>
+    <div>Adicione cada produto com nome e preço. Pressione <strong>Enter</strong> para ir ao próximo campo. O agente usa essas informações para responder com precisão.</div>
+  </div>
+
+  <div id="prod-input-section">
+    <div class="field" id="f-produtos" style="margin-bottom:.6rem">
+      <label>Produtos / serviços com preços</label>
+    </div>
+    <div class="product-input-row">
+      <input id="prod-nome" placeholder="Nome do produto ou serviço" maxlength="80"/>
+      <input id="prod-preco" placeholder="R$ 0,00" maxlength="12" oninput="formatPrice(this)"/>
+      <button class="btn-add-product" onclick="addProduct()" title="Adicionar produto">+</button>
+    </div>
+  </div>
+  <div class="product-count" id="prod-count" style="display:none"></div>
+  <div class="product-list" id="prod-list"></div>
+  <span class="product-manual-toggle" onclick="toggleManualProducts()">✏️ Prefiro digitar livremente</span>
+
+  <div class="field" id="prod-manual-wrap" style="display:none;margin-top:10px">
+    <textarea id="produtos" style="min-height:120px" placeholder="Ex:&#10;- Marmita P (400g): R$18&#10;- Marmita G (600g): R$24&#10;- X-burger artesanal: R$28"></textarea>
+  </div>
+
+  <div class="field" style="margin-top:1rem">
+    <label>O que NÃO oferece <span class="badge-optional">Opcional</span></label>
+    <textarea id="nao_oferece" style="min-height:64px" placeholder="Ex: Não fazemos entrega fora de Joinville. Não trabalhamos com convênio médico."></textarea>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PASSO 4: Personalidade -->
+<!-- ══════════════════════════════════════════ -->
+<div class="step" id="s4">
+  <div class="step-eyebrow">Passo 4 de 7</div>
+  <div class="step-title">Personalidade do agente</div>
+  <div class="step-desc">O "jeito de ser" do seu atendente virtual. Escolha o que combina com sua empresa.</div>
+
+  <div class="field" id="f-agente">
+    <label>Nome do agente</label>
+    <input id="agente_nome" placeholder="Ex: Carol, Diego, Ana, Ju — use um nome real, não Assistente" oninput="onField('agente_nome')"/>
+  </div>
+
+  <div class="field" id="f-tone">
+    <label>Tom de comunicação</label>
+    <div class="tone-grid" id="tone-grid">
+      <div class="tone-opt" data-val="Descontraído e bem-humorado. Ri com o cliente mas não deixa a venda morrer. Levemente sarcástico quando cabe.">
+        <div class="tone-name">😄 Bem-humorado</div>
+        <div class="tone-sub">Barbearia, lanchonete, loja</div>
+      </div>
+      <div class="tone-opt" data-val="Acolhedor e caloroso. Fala com carinho, como quem convida pra entrar. Cria desejo e urgência com leveza.">
+        <div class="tone-name">🤗 Acolhedor</div>
+        <div class="tone-sub">Restaurante, estética, moda</div>
+      </div>
+      <div class="tone-opt" data-val="Profissional e objetivo. Direto ao ponto, sem enrolação. Transmite confiança e competência.">
+        <div class="tone-name">💼 Profissional</div>
+        <div class="tone-sub">Clínica, imobiliária, serviços</div>
+      </div>
+      <div class="tone-opt" data-val="Simpático e neutro. Equilibrado — nem muito formal, nem muito informal. Adapta o tom conforme o cliente.">
+        <div class="tone-name">😊 Equilibrado</div>
+        <div class="tone-sub">Qualquer segmento</div>
+      </div>
+      <div class="tone-opt" data-val="Vendedor persuasivo e confiante. Foca em quebrar objeções, criar urgência e fechar. Cada resposta tem um gatilho sutil de venda.">
+        <div class="tone-name">🎯 Vendedor</div>
+        <div class="tone-sub">Prospecção, e-commerce, vendas</div>
+      </div>
+      <div class="tone-opt" data-val="Empresarial e formal. Comunicação B2B — preciso, objetivo e respeitoso. Ideal para proposta comercial e relacionamento corporativo.">
+        <div class="tone-name">🏢 Empresarial</div>
+        <div class="tone-sub">B2B, serviços corporativos</div>
+      </div>
+      <div class="tone-opt" data-val="Consultivo e especialista. Age como consultor: faz perguntas, entende a necessidade e apresenta a solução ideal. Tom de autoridade no assunto.">
+        <div class="tone-name">🧠 Consultivo</div>
+        <div class="tone-sub">Saúde, educação, tecnologia</div>
+      </div>
+      <div class="tone-opt" data-val="Descontraído como amigo próximo. Trata o cliente como se fosse colega de longa data — informal, engraçado, com gírias leves. Zero formalidade.">
+        <div class="tone-name">🤙 Amigão</div>
+        <div class="tone-sub">Jovem, streetwear, delivery</div>
+      </div>
+    </div>
+
+    <div class="tone-traits-wrap" id="tone-traits-wrap" style="display:none">
+      <div class="tone-traits-label">Traços adicionais — combine com o tom escolhido</div>
+      <div class="tone-traits" id="tone-traits">
+        <div class="trait-chip" data-trait="Usa gírias leves e linguagem informal.">Informal / gírias</div>
+        <div class="trait-chip" data-trait="Usa linguagem formal, evita abreviações.">Formal</div>
+        <div class="trait-chip" data-trait="Muito direto — respostas curtíssimas, sem rodeios.">Super direto</div>
+        <div class="trait-chip" data-trait="Empático e paciente, nunca apressado com o cliente.">Empático</div>
+        <div class="trait-chip" data-trait="Cria urgência sutilmente — menciona disponibilidade limitada, horário de pico etc.">Cria urgência</div>
+        <div class="trait-chip" data-trait="Usa muita energia e entusiasmo nas respostas.">Entusiasmado</div>
+        <div class="trait-chip" data-trait="Trata o cliente pelo nome sempre que possível.">Usa o nome do cliente</div>
+        <div class="trait-chip" data-trait="Proativo — antecipa perguntas e oferece informações extras.">Proativo</div>
+        <div class="trait-chip" data-trait="Faz perguntas para entender melhor o que o cliente precisa.">Faz perguntas</div>
+        <div class="trait-chip" data-trait="Reforça prova social — menciona avaliações, clientes satisfeitos e popularidade dos produtos.">Prova social</div>
+        <div class="trait-chip" data-trait="Menciona vantagens do PIX quando relevante.">Incentiva PIX</div>
+        <div class="trait-chip" data-trait="Sempre finaliza com uma pergunta ou call-to-action para manter a conversa viva.">Sempre fecha CTA</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label>Usa emojis?</label>
+      <div class="custom-select-wrap">
+        <select id="emojis">
+          <option value="sim">Sim — 1 por mensagem</option>
+          <option value="nao">Não usa emojis</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Pode fechar vendas?</label>
+      <div class="custom-select-wrap">
+        <select id="fechar_venda" onchange="updateFecharNotice(this)">
+          <option value="nao">Não — encaminha humano</option>
+          <option value="parcial">Pedidos simples: sim</option>
+          <option value="sim">Sim, pode fechar tudo</option>
+        </select>
+      </div>
+      <div class="fechar-notice" id="fechar-notice">
+        O agente pode coletar o pedido e encaminhar para sua confirmação, ou fechar diretamente — conforme seu plano.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PASSO 5: FAQ -->
+<!-- ══════════════════════════════════════════ -->
+<div class="step" id="s5">
+  <div class="step-eyebrow">Passo 5 de 7</div>
+  <div class="step-title">Perguntas frequentes</div>
+  <div class="step-desc">O que os clientes mais perguntam? O agente vai responder automaticamente com essas informações.</div>
+
+  <div class="tip">
+    <span class="tip-icon">💡</span>
+    <div>Selecione as dúvidas mais comuns — ou escreva as suas abaixo. Formato: <strong>"Pergunta? Resposta."</strong></div>
+  </div>
+
+  <span class="chips-label">Selecione as que se aplicam ao seu negócio</span>
+  <div class="chips-wrap" id="faq-chips">
+    <div class="chip" data-faq="Tem entrega? Sim, realizamos entrega na região.">📦 Tem entrega?</div>
+    <div class="chip" data-faq="Aceita cartão? Sim, crédito, débito e PIX.">💳 Aceita cartão?</div>
+    <div class="chip" data-faq="Quanto tempo demora? Em média 35 a 45 minutos.">⏱ Tempo de entrega?</div>
+    <div class="chip" data-faq="Tem pedido mínimo? Sim, R$35 para entrega.">💰 Pedido mínimo?</div>
+    <div class="chip" data-faq="Fazem troca ou devolução? Sim, em até 30 dias com nota fiscal.">🔄 Trocas?</div>
+    <div class="chip" data-faq="Tem opção vegetariana? Consulte o cardápio do dia.">🥗 Vegetariano?</div>
+    <div class="chip" data-faq="Vocês trabalham com agendamento? Sim, pelo WhatsApp mesmo.">📅 Agendamento?</div>
+    <div class="chip" data-faq="Qual o horário de funcionamento? Consulte nossos horários atualizados.">🕐 Horário?</div>
+    <div class="chip" data-faq="Tem estacionamento? Sim, temos estacionamento gratuito.">🅿️ Estacionamento?</div>
+    <div class="chip" data-faq="Aceita PIX com desconto? Sim, pagamentos via PIX têm desconto especial.">⚡ PIX com desconto?</div>
+    <div class="chip" data-faq="Entregam no mesmo dia? Sim, pedidos até as 18h saem no mesmo dia.">🚀 Mesmo dia?</div>
+    <div class="chip" data-faq="Têm cardápio online? Pode pedir pelo WhatsApp mesmo, sem precisar de aplicativo.">📋 Cardápio?</div>
+    <div class="chip" data-faq="Fazem encomenda? Sim, com pelo menos 24h de antecedência.">🎂 Encomenda?</div>
+    <div class="chip" data-faq="Atendem no local ou só delivery? Atendemos das duas formas.">🍽️ Atende no local?</div>
+    <div class="chip" data-faq="Têm promoção? Consulte nossas promoções da semana pelo WhatsApp.">🎉 Promoção?</div>
+    <div class="chip" data-faq="Posso parcelar? Sim, parcelamos em até 3x sem juros no cartão.">📊 Parcela?</div>
+    <div class="chip" data-faq="Atendem pessoas com restrição alimentar? Pergunte sobre os ingredientes antes de pedir.">🌾 Restrição?</div>
+    <div class="chip" data-faq="Têm nota fiscal? Sim, emitimos nota fiscal para todos os pedidos.">🧾 Nota fiscal?</div>
+    <div class="chip" data-faq="Trabalham com convênio? Consulte as opções disponíveis com nossa equipe.">🏥 Convênio?</div>
+    <div class="chip" data-faq="Como funciona o primeiro atendimento? É simples — me conta o que você precisa e resolvo por aqui.">❓ Como funciona?</div>
+  </div>
+  <div class="chips-hint" id="faq-chips-count">0 perguntas selecionadas</div>
+
+  <div class="field-sub-label">Perguntas personalizadas <span class="badge-optional">Opcional</span></div>
+  <div class="field">
+    <textarea id="faq" style="min-height:100px" placeholder="Adicione outras dúvidas específicas do seu negócio:&#10;- Qual o prazo para o interior? 2 dias úteis.&#10;- Têm tamanho família? Sim, serve 4 pessoas por R$45."></textarea>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PASSO 6: Objeções -->
+<!-- ══════════════════════════════════════════ -->
+<div class="step" id="s6">
+  <div class="step-eyebrow">Passo 6 de 7</div>
+  <div class="step-title">Objeções e situações difíceis</div>
+  <div class="step-desc">É o que faz o agente parecer humano de verdade — saber lidar quando o cliente hesita ou reclama.</div>
+
+  <div class="tip">
+    <span class="tip-icon">💡</span>
+    <div>Formato: <strong>"Objeção" → como responder.</strong> Seja direto e use o tom que você escolheu.</div>
+  </div>
+
+  <span class="chips-label">Objeções mais comuns — selecione as que se aplicam</span>
+  <div class="chips-wrap" id="objecoes-chips">
+    <div class="chip" data-obj='"Tá caro" → "É feito na hora, com qualidade. Vale cada centavo — e você vai sentir a diferença."'>💸 Tá caro</div>
+    <div class="chip" data-obj='"Vou pensar" → "O pico começa em breve. Se fechar agora, garante entrega mais rápida."'>🤔 Vou pensar</div>
+    <div class="chip" data-obj='"Vi mais barato" → "Aqui é feito na hora, não aquecido. A diferença dá pra sentir."'>🔍 Vi mais barato</div>
+    <div class="chip" data-obj='"Depois eu volto" → "Posso reservar pra você? Assim garante quando quiser."'>🕐 Depois eu volto</div>
+    <div class="chip" data-obj='"Não tenho dinheiro agora" → "Temos PIX com desconto especial. Quer ver as opções?"'>💳 Sem dinheiro</div>
+    <div class="chip" data-obj='"Não confio em pagar antes" → "Entendo. Temos opções na entrega ou retirada no local."'>🔒 Desconfiança</div>
+    <div class="chip" data-obj='"Demora muito?" → "Priorizamos quem fecha logo. Fechando agora, fica na fila de cima."'>⏰ Demora?</div>
+    <div class="chip" data-obj='"Preciso falar com meu marido/esposa" → "Que ótima decisão em família! Posso mandar os detalhes?"'>👫 Consultar alguém</div>
+    <div class="chip" data-obj='"Já tenho fornecedor" → "Entendo! Só quero que você compare. Posso te mandar nossos diferenciais?"'>🤝 Já tem fornecedor</div>
+    <div class="chip" data-obj='"Não é pra agora" → "Posso deixar anotado e te lembro quando precisar?"'>📌 Não é agora</div>
+    <div class="chip" data-obj='"Já fui enganado antes" → "Entendo. Temos avaliações reais de clientes — quer ver?"'>😤 Medo de enganação</div>
+    <div class="chip" data-obj='"Quero desconto" → "Pagando no PIX hoje tem condição especial. Quer saber o valor?"'>🏷️ Quer desconto</div>
+    <div class="chip" data-obj='"O concorrente faz mais barato" → "O nosso diferencial é qualidade. Vale a pena comparar."'>⚔️ Concorrente</div>
+    <div class="chip" data-obj='"Não gostei da última vez" → "Poxa, que pena! Me conta o que aconteceu? Quero resolver isso."'>😞 Experiência ruim</div>
+    <div class="chip" data-obj='"Vou pesquisar mais" → "Ótimo! Se quiser, te mando um resumo rápido com o que oferecemos."'>🔎 Vai pesquisar</div>
+    <div class="chip" data-obj='"Está demorando" → "Entendo a ansiedade! Já estou verificando o status pra você."'>😠 Impaciente</div>
+    <div class="chip" data-obj='"É muito complicado" → "Faz tudo por aqui mesmo, pelo WhatsApp. Simples assim."'>😰 Acha complicado</div>
+    <div class="chip" data-obj='"Prefiro pessoalmente" → "Com certeza! Quer marcar uma visita? Posso te ajudar a agendar."'>🏪 Prefere pessoal</div>
+    <div class="chip" data-obj='"Não preciso disso agora" → "Faz sentido. Posso te avisar quando tiver promoção?"'>📵 Não precisa</div>
+    <div class="chip" data-obj='"Não sei se serve pra mim" → "Me conta um pouco mais do que precisa. Juntos a gente descobre."'>❓ Não sabe se serve</div>
+  </div>
+  <div class="chips-hint" id="objecoes-chips-count">0 objeções selecionadas</div>
+
+  <div class="field-sub-label">Objeções personalizadas <span class="badge-optional">Opcional</span></div>
+  <div class="field">
+    <textarea id="objecoes" style="min-height:90px" placeholder='Adicione respostas específicas:&#10;- "Não entregam no meu bairro" → "Verifico a área pra você. Qual seu bairro?"'></textarea>
+  </div>
+
+  <div class="field">
+    <label>Quando chamar atendimento humano <span class="badge-optional">Opcional</span></label>
+
+    <textarea id="transferir" style="min-height:60px" placeholder="Ex: Reclamações sobre pedido errado, pedidos acima de R$200, problemas de pagamento."></textarea>
+  </div>
+
+  <div class="field">
+    <label>Assuntos proibidos <span class="badge-optional">Opcional</span></label>
+    <input id="proibidos" placeholder="Ex: política, preços de concorrentes, processos internos"/>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- PASSO 7: Recursos e configurações finais -->
+<!-- ══════════════════════════════════════════ -->
+<div class="step" id="s7">
+  <div class="step-eyebrow">Passo 7 de 7</div>
+  <div class="step-title">Recursos e configurações</div>
+  <div class="step-desc">Veja o que está incluído no seu agente e marque as situações que ele deve saber lidar.</div>
+
+  <!-- Aviso de planos -->
+  <div class="plan-notice">
+    <strong>ℹ️ Sobre os recursos:</strong> todos os recursos abaixo estarão disponíveis de acordo com o plano acordado entre nós. Se tiver dúvidas sobre o que está incluído no seu plano, entre em contato antes de finalizar.
+  </div>
+
+  <!-- Feature list -->
+  <div class="field">
+    <label>O que seu agente inclui</label>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-text">
+          <strong>Acordado 24h por dia</strong>
+          <span>Atende clientes a qualquer hora, sem pausas, sem feriados</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🧠</div>
+        <div class="feature-text">
+          <strong>Integração com o melhor modelo do mercado</strong>
+          <span>Capacidade de conversação e diálogo de última geração</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">👤</div>
+        <div class="feature-text">
+          <strong>Handoff IA → Humano</strong>
+          <span>Transfere o atendimento para você quando necessário, sem perder o contexto</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-text">
+          <strong>Agente treinado para vender</strong>
+          <span>Quebra objeções, cria urgência e conduz o cliente até o fechamento</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💬</div>
+        <div class="feature-text">
+          <strong>Quebra de objeções automática</strong>
+          <span>Responde dúvidas, hesitações e comparações com concorrentes</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">👤</div>
+        <div class="feature-text">
+          <strong>Handoff IA → Humano</strong>
+          <span>Transfere o atendimento para você quando necessário, sem perder o contexto</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div class="feature-text">
+          <strong>Planilha personalizada de pedidos</strong>
+          <span>Registro automático de cada atendimento e pedido recebido</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔄</div>
+        <div class="feature-text">
+          <strong>Atualizações ilimitadas</strong>
+          <span>Ajuste produtos, preços e comportamento quando quiser</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🛡️</div>
+        <div class="feature-text">
+          <strong>Suporte prioritário</strong>
+          <span>Atendimento direto para ajustes, dúvidas e melhorias</span>
+        </div>
+        <div class="feature-check">✓</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Situações -->
+  <div class="field">
+    <label>Situações que o agente deve lidar</label>
+    <div class="check-list" id="situacoes-list">
+      <div class="check-item checked" data-val="fora_horario">
+        <div class="cb">✓</div>
+        <div><div class="check-title">Fora do horário</div><div class="check-sub">Atende e oferece anotar o pedido para quando abrir</div></div>
+      </div>
+      <div class="check-item checked" data-val="reclamacao">
+        <div class="cb">✓</div>
+        <div><div class="check-title">Reclamação</div><div class="check-sub">Valida o sentimento antes de responder, nunca é defensivo</div></div>
+      </div>
+      <div class="check-item checked" data-val="cliente_sumiu">
+        <div class="cb">✓</div>
+        <div><div class="check-title">Cliente sumiu e voltou</div><div class="check-sub">Retoma a conversa naturalmente de onde parou</div></div>
+      </div>
+      <div class="check-item checked" data-val="perguntou_robo">
+        <div class="cb">✓</div>
+        <div><div class="check-title">"Você é robô?"</div><div class="check-sub">Responde como atendente, nunca confirma nem nega ser IA</div></div>
+      </div>
+      <div class="check-item checked" data-val="mensagem_estranha">
+        <div class="cb">✓</div>
+        <div><div class="check-title">Mensagem sem sentido / áudio / link</div><div class="check-sub">Responde com leveza pedindo para explicar</div></div>
+      </div>
+      <div class="check-item" data-val="alergia">
+        <div class="cb"></div>
+        <div><div class="check-title">Dúvida sobre alergia / ingredientes</div><div class="check-sub">Informa que vai verificar com a equipe</div></div>
+      </div>
+      <div class="check-item" data-val="pedido_grande">
+        <div class="cb"></div>
+        <div><div class="check-title">Pedido grande / corporativo</div><div class="check-sub">Oferece atendimento especial e combina com antecedência</div></div>
+      </div>
+      <div class="check-item" data-val="grosseria">
+        <div class="cb"></div>
+        <div><div class="check-title">Cliente grosseiro</div><div class="check-sub">Mantém o tom e pede respeito de forma gentil</div></div>
+      </div>
+      <div class="check-item" data-val="desconto">
+        <div class="cb"></div>
+        <div><div class="check-title">Pedido de desconto</div><div class="check-sub">Reforça opção PIX ou benefício em vez de ceder direto</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SUCESSO -->
+<!-- ══════════════════════════════════════════ -->
+<div class="step" id="s8">
+  <div class="success">
+    <div class="success-ring">🚀</div>
+    <div class="success-title">Configuração enviada!</div>
+    <div class="success-desc">Recebemos tudo. Entraremos em contato em breve para conectar seu WhatsApp e deixar o agente ativo.</div>
+    <div class="resumo-card" id="resumo"></div>
+    <div class="next-steps">
+      <strong>Próximos passos</strong>
+      <ol>
+        <li>Você receberá uma mensagem nossa confirmando o recebimento</li>
+        <li>Vamos configurar sua instância e te enviar um <strong>código de pareamento de 8 dígitos</strong></li>
+        <li>No celular: <em>WhatsApp → ⋮ → Dispositivos vinculados → Vincular com número de telefone</em></li>
+        <li>Digite o código — seu agente entra em operação imediatamente 🤖</li>
+        <li>Acompanhe os atendimentos pela planilha que vamos compartilhar com você</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- Nav -->
+<div class="nav" id="nav">
+  <button class="btn btn-ghost" id="btn-back" onclick="go(-1)" style="display:none">← Voltar</button>
+  <span class="nav-meta" id="step-count">1 de 7</span>
+  <button class="btn btn-primary" id="btn-next" onclick="go(1)">
+    <div class="spinner"></div>
+    <span class="btn-text">Continuar →</span>
+  </button>
+</div>
+<div class="error-msg" id="error-msg">
+  ⚠ Erro de conexão ao enviar.
+  <br><button class="btn-retry" onclick="submit()">↻ Tentar novamente</button>
+</div>
+
+</div><!-- /container -->
+
+<script>
+const WEBHOOK_URL = 'https://moisespard14.app.n8n.cloud/webhook/165814ac-dcf1-4db5-a848-edd3bf747562';
+const STEPS = ['Empresa','Horários','Produtos','Agente','FAQ','Objeções','Plano'];
+const total = 7;
+let cur = 1;
+let selectedPlan = '';
+let tone = '';
+let selectedTraits = [];
+let selectedFaqChips = [];
+let selectedObjecoesChips = [];
+let products = [];
+let manualProductsMode = false;
+let selectedPayments = [];
+
+// ── Progress bar ─────────────────────────────
+function buildProgress() {
+  const bar = document.getElementById('progress-bar');
+  bar.innerHTML = STEPS.map((label, i) => {
+    const n = i + 1;
+    const cls = n < cur ? 'done' : n === cur ? 'active' : '';
+    const icon = n < cur ? '✓' : n;
+    return `<div class="prog-step ${cls}">
+      <div class="prog-line"></div>
+      <div class="prog-circle">${icon}</div>
+      <div class="prog-label">${label}</div>
+    </div>`;
+  }).join('');
+}
+function updateProgress() { buildProgress(); }
+buildProgress();
+
+// ── Plan ─────────────────────────────────────
+function selectPlan(el) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan = el.dataset.plan;
+  checkHandoff();
+  refreshFieldStates();
+}
+
+function checkHandoff() {
+  // Handoff is locked by default — unlocked only if plan was set externally
+  const isPro = selectedPlan === 'pro' || selectedPlan === 'premium';
+  const lockedWrap = document.getElementById('handoff-locked-wrap');
+  const unlockedWrap = document.getElementById('handoff-unlocked-wrap');
+  const lockBadge = document.getElementById('handoff-lock');
+  const hint = document.getElementById('handoff-hint');
+  if (lockedWrap) lockedWrap.style.display = isPro ? 'none' : 'block';
+  if (unlockedWrap) unlockedWrap.style.display = isPro ? 'block' : 'none';
+  if (lockBadge) lockBadge.style.display = isPro ? 'none' : 'inline-flex';
+  if (hint) hint.classList.toggle('visible', !isPro);
+}
+
+// ── Tone ─────────────────────────────────────
+document.getElementById('tone-grid').addEventListener('click', e => {
+  const opt = e.target.closest('.tone-opt');
+  if (!opt) return;
+  document.querySelectorAll('.tone-opt').forEach(o => o.classList.remove('selected'));
+  opt.classList.add('selected');
+  tone = opt.dataset.val;
+  document.getElementById('tone-traits-wrap').style.display = 'block';
+  refreshFieldStates();
+});
+
+document.getElementById('tone-traits').addEventListener('click', e => {
+  const chip = e.target.closest('.trait-chip');
+  if (!chip) return;
+  chip.classList.toggle('selected');
+  const trait = chip.dataset.trait;
+  if (chip.classList.contains('selected')) selectedTraits.push(trait);
+  else selectedTraits = selectedTraits.filter(t => t !== trait);
+});
+
+function buildToneValue() {
+  if (!tone) return '';
+  return selectedTraits.length ? tone + ' Traços adicionais: ' + selectedTraits.join(' ') : tone;
+}
+
+// ── Payment toggles ───────────────────────────
+function updatePayGrid() {
+  const grid = document.getElementById('payment-grid');
+  const hasAny = grid.querySelector('.pay-btn.selected');
+  grid.classList.toggle('has-selection', !!hasAny);
+}
+
+function togglePay(btn) {
+  btn.classList.toggle('selected');
+  const pay = btn.dataset.pay;
+  if (btn.classList.contains('selected')) {
+    if (!selectedPayments.includes(pay)) selectedPayments.push(pay);
+  } else {
+    selectedPayments = selectedPayments.filter(p => p !== pay);
+  }
+  updatePayGrid();
+  refreshFieldStates();
+}
+
+function togglePayOutro(btn) {
+  btn.classList.toggle('selected');
+  const wrap = document.getElementById('pagamento-outro-wrap');
+  wrap.style.display = btn.classList.contains('selected') ? 'block' : 'none';
+  if (!btn.classList.contains('selected')) {
+    selectedPayments = selectedPayments.filter(p => p !== 'outro');
+  }
+  updatePayGrid();
+}
+
+function getPaymentoFinal() {
+  const list = [...selectedPayments.filter(p => p !== 'outro')];
+  const outro = document.getElementById('pagamento-outro').value.trim();
+  if (outro) list.push(outro);
+  return list.join(', ');
+}
+
+// ── Dono WhatsApp formatting ─────────────────
+function formatDono(input) {
+  let d = input.value.replace(/\D/g, '');
+  if (d.startsWith('55') && d.length > 11) d = d.slice(2);
+  d = d.slice(0, 11);
+  const full = d.length >= 10 ? '55' + d : '';
+  const preview = document.getElementById('dono_preview');
+  const status = document.getElementById('dono-status');
+  if (full.length === 12 || full.length === 13) {
+    preview.textContent = full;
+    status.className = 'wpp-status ok';
+  } else if (d.length > 0) {
+    preview.textContent = full || '—';
+    status.className = 'wpp-status warn';
+  } else {
+    preview.textContent = '—';
+    status.className = 'wpp-status';
+  }
+}
+
+function getDono() {
+  let d = (document.getElementById('dono_whatsapp_raw')?.value || '').replace(/\D/g, '');
+  if (d.startsWith('55') && d.length > 11) d = d.slice(2);
+  d = d.slice(0, 11);
+  return d.length >= 10 ? '55' + d : d;
+}
+
+// ── WhatsApp formatting ───────────────────────
+function formatWhatsapp(input) {
+  let d = input.value.replace(/\D/g, '');
+  // Remove leading 55 if user typed it (we add it)
+  if (d.startsWith('55') && d.length > 11) d = d.slice(2);
+  // Limit to 11 digits (DDD 2 + number up to 9 digits)
+  d = d.slice(0, 11);
+  const full = d.length >= 10 ? '55' + d : '';
+  const preview = document.getElementById('whatsapp_preview');
+  const status = document.getElementById('wpp-status');
+  const digits = document.getElementById('wpp-digits');
+  if (full.length === 13) {
+    preview.textContent = full;
+    status.className = 'wpp-status ok';
+    digits.textContent = '✓ 13 dígitos — formato uazapi correto · código de pareamento ativo';
+    digits.style.color = 'var(--green)';
+    refreshFieldStates();
+  } else if (full.length === 12) {
+    preview.textContent = full;
+    status.className = 'wpp-status ok';
+    digits.textContent = '✓ 12 dígitos — formato uazapi correto · código de pareamento ativo';
+    digits.style.color = 'var(--green)';
+    refreshFieldStates();
+  } else if (d.length > 0) {
+    preview.textContent = full || '—';
+    status.className = 'wpp-status warn';
+    digits.textContent = `${full.length || 0} dígitos (precisa de 12 ou 13)`;
+    digits.style.color = 'var(--amber)';
+  } else {
+    preview.textContent = '—';
+    status.className = 'wpp-status';
+    digits.textContent = '';
+  }
+}
+
+function getWhatsapp() {
+  let d = document.getElementById('whatsapp_raw').value.replace(/\D/g, '');
+  if (d.startsWith('55') && d.length > 11) d = d.slice(2);
+  d = d.slice(0, 11);
+  return d.length >= 10 ? '55' + d : '';
+}
+
+// ── Entrega toggle ────────────────────────────
+function toggleEntrega(sel) {
+  // entrega_info is always visible now
+}
+
+// ── Situações ─────────────────────────────────
+document.getElementById('situacoes-list').addEventListener('click', e => {
+  const item = e.target.closest('.check-item');
+  if (!item) return;
+  item.classList.toggle('checked');
+  item.querySelector('.cb').textContent = item.classList.contains('checked') ? '✓' : '';
+});
+
+// ── Product builder ───────────────────────────
+function formatPrice(input) {
+  let val = input.value.replace(/\D/g, '');
+  if (!val) { input.value = ''; return; }
+  val = (parseInt(val) / 100).toFixed(2);
+  input.value = 'R$ ' + val.replace('.', ',');
+}
+
+function addProduct() {
+  const nomeEl = document.getElementById('prod-nome');
+  const precoEl = document.getElementById('prod-preco');
+  const nome = nomeEl.value.trim();
+  const preco = precoEl.value.trim();
+  if (!nome) { nomeEl.focus(); return; }
+  if (!preco || preco === 'R$ 0,00') {
+    precoEl.focus();
+    precoEl.style.borderColor = 'var(--red)';
+    precoEl.style.boxShadow = '0 0 0 3px rgba(255,77,77,.15)';
+    setTimeout(() => {
+      precoEl.style.borderColor = '';
+      precoEl.style.boxShadow = '';
+    }, 1800);
+    return;
+  }
+  products.push({ id: Date.now(), nome, preco });
+  renderProducts();
+  nomeEl.value = ''; precoEl.value = '';
+  nomeEl.focus();
+  refreshFieldStates();
+}
+
+function removeProduct(id) {
+  products = products.filter(p => p.id !== id);
+  renderProducts();
+  refreshFieldStates();
+}
+
+function renderProducts() {
+  const list = document.getElementById('prod-list');
+  const count = document.getElementById('prod-count');
+  const row = document.getElementById('prod-input-section');
+  list.innerHTML = products.map(p => `
+    <div class="product-item">
+      <span class="product-item-name">${p.nome}</span>
+      <span class="product-item-price">${p.preco || '—'}</span>
+      <button class="product-item-del" onclick="removeProduct(${p.id})" title="Remover">×</button>
+    </div>`).join('');
+  if (products.length > 0) {
+    count.textContent = products.length + ' produto' + (products.length > 1 ? 's' : '') + ' cadastrado' + (products.length > 1 ? 's' : '');
+    count.style.display = 'block';
+    row.classList.add('products-filled');
+  } else {
+    count.style.display = 'none';
+    row.classList.remove('products-filled');
+  }
+}
+
+function toggleManualProducts() {
+  manualProductsMode = !manualProductsMode;
+  document.getElementById('prod-manual-wrap').style.display = manualProductsMode ? 'block' : 'none';
+  document.querySelector('.product-manual-toggle').textContent = manualProductsMode ? '✕ Fechar texto livre' : '✏️ Prefiro digitar livremente';
+}
+
+document.getElementById('prod-nome').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('prod-preco').focus(); }
+});
+document.getElementById('prod-preco').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addProduct(); }
+});
+
+// ── FAQ chips ─────────────────────────────────
+document.getElementById('faq-chips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  chip.classList.toggle('selected');
+  const val = chip.dataset.faq;
+  if (chip.classList.contains('selected')) selectedFaqChips.push(val);
+  else selectedFaqChips = selectedFaqChips.filter(v => v !== val);
+  const n = selectedFaqChips.length;
+  document.getElementById('faq-chips-count').textContent = n === 0 ? '0 perguntas selecionadas' : `${n} pergunta${n > 1 ? 's' : ''} selecionada${n > 1 ? 's' : ''}`;
+});
+
+// ── Objeções chips ────────────────────────────
+document.getElementById('objecoes-chips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  chip.classList.toggle('selected');
+  const val = chip.dataset.obj;
+  if (chip.classList.contains('selected')) selectedObjecoesChips.push(val);
+  else selectedObjecoesChips = selectedObjecoesChips.filter(v => v !== val);
+  const n = selectedObjecoesChips.length;
+  document.getElementById('objecoes-chips-count').textContent = n === 0 ? '0 objeções selecionadas' : `${n} objeção${n > 1 ? 'ões' : ''} selecionada${n > 1 ? 's' : ''}`;
+});
+
+// ── Fechar venda notice ───────────────────────
+function updateFecharNotice(sel) {
+  document.getElementById('fechar-notice').classList.toggle('visible', sel.value !== 'nao');
+}
+
+// ── Helpers ───────────────────────────────────
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function showAlert(msg) {
+  document.querySelector('.inline-alert')?.remove();
+  const toast = document.createElement('div');
+  toast.className = 'inline-alert';
+  toast.textContent = '⚠ ' + msg;
+  document.getElementById('nav').before(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+// ── Situações map ─────────────────────────────
+function getSituacoes() {
+  const map = {
+    fora_horario:   'Fora do horário → "Estamos fechados agora, mas abrimos [horário]. Já anoto seu pedido?"',
+    reclamacao:     'Reclamação → valide o sentimento: "Entendo, isso é chato mesmo." Nunca seja defensivo.',
+    cliente_sumiu:  'Cliente sumiu e voltou → retome naturalmente de onde parou.',
+    perguntou_robo: 'Se perguntarem se é robô → responda como atendente. Nunca confirme nem negue ser IA.',
+    mensagem_estranha: 'Mensagem sem sentido/link/áudio → "Não consegui abrir isso 😅 Me explica o que precisa?"',
+    alergia:        'Dúvida sobre alergia → "Me diz o que não pode comer e verifico com nossa equipe."',
+    pedido_grande:  'Pedido grande/corporativo → "Para pedidos maiores combinamos com antecedência."',
+    grosseria:      'Cliente grosseiro → mantenha o tom. Se persistir: "Posso ajudar melhor se conversarmos com respeito."',
+    desconto:       'Pedido de desconto → reforce opção PIX ou benefício em vez de ceder direto.',
+  };
+  return Array.from(document.querySelectorAll('#situacoes-list .check-item.checked'))
+    .map(el => '- ' + (map[el.dataset.val] || el.dataset.val)).join('\n');
+}
+
+// ── Build prompt ──────────────────────────────
+function buildPrompt() {
+  const nome      = v('nome') || 'a empresa';
+  const agente    = v('agente_nome') || 'Assistente';
+  const segmento  = getSegmentoFinal();
+  const cidade    = v('cidade');
+  const descricao = v('descricao');
+  const diferencial = v('diferencial');
+  const horarios  = v('horarios');
+  const endereco  = v('endereco');
+  const entrega   = v('entrega');
+  const entrega_info = v('entrega_info');
+  const pagamento = getPaymentoFinal();
+  const fromBuilder = products.map(p => `- ${p.nome}${p.preco ? ': ' + p.preco : ''}`).join('\n');
+  const prodManual = v('produtos');
+  const produtos  = [fromBuilder, prodManual].filter(Boolean).join('\n') || 'Consulte diretamente.';
+  const nao_oferece = v('nao_oferece');
+  const faqChipsText = selectedFaqChips.map(f => '- ' + f).join('\n');
+  const faqFinal  = [faqChipsText, v('faq')].filter(Boolean).join('\n') || 'Responda com base nas informações acima. Se não souber, diga que vai verificar.';
+  const objChipsText = selectedObjecoesChips.map(o => '- ' + o).join('\n');
+  const objecoesFinal = [objChipsText, v('objecoes')].filter(Boolean).join('\n') || 'Ouça o cliente, entenda a dúvida e reforce o diferencial. Nunca pressione, mas não deixe a conversa morrer.';
+  const fechar    = v('fechar_venda');
+  const emojis    = v('emojis');
+  const situacoes = getSituacoes();
+  const isPro     = selectedPlan === 'pro' || selectedPlan === 'premium';
+  const handoffVal = isPro ? (document.getElementById('handoff-active')?.value || 'nao') : 'nao';
+
+  let entregaLine = '';
+  if (entrega === 'sim' || entrega === 'ambos') entregaLine = `\nEntrega: ${entrega_info || 'disponível — consulte condições'}`;
+  else if (entrega === 'retirada') entregaLine = '\nEntrega: apenas retirada no local';
+  else entregaLine = '\nEntrega: não realizamos entrega';
+
+  return `Você é ${agente}, atendente${segmento ? ' de ' + segmento + ' ' : ' '}d${nome}${cidade ? ' em ' + cidade : ''}.
+
+SOBRE O NEGÓCIO:
+${descricao}${diferencial ? '\nDiferencial: ' + diferencial : ''}
+Horários: ${horarios || 'consulte'}${endereco ? '\nEndereço: ' + endereco : ''}${entregaLine}${pagamento ? '\nPagamento: ' + pagamento : ''}
+
+PRODUTOS/SERVIÇOS:
+${produtos}${nao_oferece ? '\n\nNÃO OFERECEMOS:\n' + nao_oferece : ''}
+
+SEU JEITO DE FALAR:
+${buildToneValue() || 'Tom natural e simpático. Adapta conforme o cliente.'}
+${emojis === 'sim' ? 'Pode usar emojis — máximo 1 por mensagem, só quando cair natural.' : 'Não use emojis.'}
+Respostas curtas — máximo 2 linhas, como uma conversa de WhatsApp.
+JAMAIS use asteriscos ou formatação markdown.
+
+PERGUNTAS FREQUENTES:
+${faqFinal}
+
+COMO LIDAR COM OBJEÇÕES:
+${objecoesFinal}
+
+REGRAS ABSOLUTAS:
+1) JAMAIS use asteriscos ou markdown.
+2) ${emojis === 'sim' ? 'Máximo 1 emoji por mensagem — só quando cair natural.' : 'Não use emojis.'}
+3) Máximo 2 linhas por resposta.
+4) Saudação APENAS na primeira mensagem do histórico. Nunca recumprimente.
+5) NUNCA diga "Em que posso te ajudar?" ou variações — é robótico.
+6) NUNCA ofereça enviar fotos ou catálogo.
+7) Nunca invente informações. Se não souber: "Deixa eu verificar pra você."
+8) Fechar venda: ${fechar === 'sim' ? 'pode fechar diretamente.' : fechar === 'parcial' ? 'pedidos simples pode fechar, demais encaminhar para humano.' : 'encaminhar para atendimento humano.'}${v('transferir') ? '\n9) Chamar humano quando: ' + v('transferir') : ''}${v('proibidos') ? '\n10) Nunca abordar: ' + v('proibidos') + '.' : ''}${handoffVal === 'sim' ? '\n11) Se o cliente pedir para falar com humano ou responsável → confirmar transferência.' : ''}
+
+SITUAÇÕES FORA DO ROTEIRO:
+${situacoes || '- Mensagem sem sentido → pergunte naturalmente o que precisa.\n- Se não souber → admita com leveza: "Deixa eu verificar."'}`;
+}
+
+// ── Validation ────────────────────────────────
+function validate(step) {
+  if (step === 1) {
+    if (!v('nome'))     { showAlert('Informe o nome da empresa.'); return false; }
+    if (!v('segmento')) { showAlert('Selecione o segmento.'); return false; }
+    if (!v('cidade'))   { showAlert('Informe a cidade.'); return false; }
+    if (!v('descricao')){ showAlert('Descreva sua empresa.'); return false; }
+    const wpp = getWhatsapp();
+    if (wpp.length !== 12 && wpp.length !== 13) {
+      showAlert('O número do WhatsApp precisa ter 12 ou 13 dígitos (55 + DDD + número). Verifique e tente novamente.');
+      return false;
+    }
+    const dono = getDono();
+    if (dono && dono.length !== 12 && dono.length !== 13) {
+      showAlert('O número pessoal do dono precisa ter 12 ou 13 dígitos. Verifique.');
+      return false;
+    }
+  }
+  if (step === 2) {
+    if (!v('horarios')) { showAlert('Informe os horários de atendimento.'); return false; }
+    if (selectedPayments.length === 0 && !document.getElementById('pagamento-outro').value.trim()) {
+      showAlert('Selecione pelo menos uma forma de pagamento.'); return false;
+    }
+  }
+  if (step === 3) {
+    const fromBuilder = products.map(p => p.nome).join('');
+    if (!fromBuilder && !v('produtos')) { showAlert('Liste pelo menos um produto ou serviço.'); return false; }
+  }
+  if (step === 4) {
+    if (!v('agente_nome')) { showAlert('Informe o nome do agente.'); return false; }
+    if (!buildToneValue()) { showAlert('Selecione o tom de comunicação.'); return false; }
+  }
+  if (step === 7) {
+    // Sem validação de plano — removido do onboarding
+  }
+  return true;
+}
+
+// ── Submit ────────────────────────────────────
+async function submit() {
+  const btn = document.getElementById('btn-next');
+  btn.classList.add('loading'); btn.disabled = true;
+  document.getElementById('error-msg').style.display = 'none';
+
+  const isPro = selectedPlan === 'pro' || selectedPlan === 'premium';
+  const payload = {
+    nome: v('nome'), segmento: getSegmentoFinal(), cidade: v('cidade'),
+    whatsapp: getWhatsapp(),
+    descricao: v('descricao'), diferencial: v('diferencial'),
+    horarios: v('horarios'), endereco: v('endereco'),
+    entrega: v('entrega'), entrega_info: v('entrega_info'),
+    pagamento: getPaymentoFinal(),
+    produtos: [products.map(p=>`- ${p.nome}${p.preco?': '+p.preco:''}`).join('\n'), v('produtos')].filter(Boolean).join('\n'),
+    nao_oferece: v('nao_oferece'),
+    agente_nome: v('agente_nome'), tom: buildToneValue(),
+    emojis: v('emojis'), fechar_venda: v('fechar_venda'),
+    faq: [selectedFaqChips.join('\n'), v('faq')].filter(Boolean).join('\n'),
+    objecoes: [selectedObjecoesChips.join('\n'), v('objecoes')].filter(Boolean).join('\n'),
+    transferir: v('transferir'), proibidos: v('proibidos'),
+    plano: selectedPlan,
+    handoff: isPro ? (document.getElementById('handoff-active')?.value || 'nao') : 'nao',
+    agente_prompt: buildPrompt(),
+    dono_whatsapp: getDono()
+  };
+
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    showSuccess();
+  } catch(e) {
+    btn.classList.remove('loading'); btn.disabled = false;
+    document.getElementById('error-msg').style.display = 'block';
+  }
+}
+
+function showSuccess() {
+  document.getElementById('s' + cur).classList.remove('active');
+  document.getElementById('s8').classList.add('active');
+  document.getElementById('nav').style.display = 'none';
+  document.getElementById('resumo').innerHTML = `
+    <div class="resumo-row"><span class="ri">🏢</span><div><strong>${v('nome')}</strong></div></div>
+    <div class="resumo-row"><span class="ri">📍</span><div>${v('cidade') || '—'} &mdash; ${v('segmento') || '—'}</div></div>
+    <div class="resumo-row"><span class="ri">⏰</span><div>${v('horarios') || '—'}</div></div>
+    <div class="resumo-row"><span class="ri">🤖</span><div>Agente: <strong style="color:var(--green)">${v('agente_nome') || 'Assistente'}</strong></div></div>
+    <div class="resumo-row"><span class="ri">📦</span><div>Plano <strong style="color:var(--green);text-transform:capitalize">${selectedPlan}</strong></div></div>
+  `;
+}
+
+// ── Navigation ────────────────────────────────
+function go(dir) {
+  if (dir === 1) {
+    if (!validate(cur)) return;
+    if (cur === total) { submit(); return; }
+  }
+  const next = cur + dir;
+  if (next < 1 || next > total) return;
+  document.querySelector('.inline-alert')?.remove();
+  document.getElementById('s' + cur).classList.remove('active');
+  cur = next;
+  document.getElementById('s' + cur).classList.add('active');
+  updateProgress();
+  document.getElementById('btn-back').style.display = cur > 1 ? 'inline-flex' : 'none';
+  document.getElementById('step-count').textContent = cur + ' de ' + total;
+  document.getElementById('btn-next').querySelector('.btn-text').textContent = cur === total ? 'Finalizar →' : 'Continuar →';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  activateStepValidation(cur);
+}
+
+// ══ FIELD VALIDATION STATES ═══════════════════
+const STEP_REQUIRED = {
+  1: ['f-nome','f-segmento','f-cidade','f-descricao','f-whatsapp'],
+  2: ['f-horarios','f-pagamento'],
+  3: ['f-produtos'],
+  4: ['f-agente','f-tone'],
+  5: [], 6: [],
+  7: []
+};
+
+function setFieldState(fid, state) { // 'done' | 'pending' | ''
+  const el = document.getElementById(fid);
+  if (!el) return;
+  el.classList.remove('f-done','f-pending');
+  if (state) el.classList.add(state);
+}
+
+function checkFieldFilled(fid) {
+  switch(fid) {
+    case 'f-nome':     return !!v('nome');
+    case 'f-segmento': {
+      const s = v('segmento');
+      if (!s) return false;
+      if (s === 'Outro') return !!document.getElementById('segmento-outro').value.trim();
+      return true;
+    }
+    case 'f-cidade':   return !!v('cidade');
+    case 'f-descricao':return !!v('descricao');
+    case 'f-whatsapp': { const w = getWhatsapp(); return w.length===12||w.length===13; }
+    case 'f-horarios': return !!v('horarios');
+    case 'f-pagamento':return selectedPayments.length>0 || !!document.getElementById('pagamento-outro').value.trim();
+    case 'f-produtos': {
+      const fb = products.map(p=>p.nome).join('');
+      return !!(fb || v('produtos'));
+    }
+    case 'f-agente':   return !!v('agente_nome');
+    case 'f-tone':     return !!buildToneValue();
+    case 'f-plano':    return !!selectedPlan;
+    default: return true;
+  }
+}
+
+function refreshFieldStates() {
+  const reqs = STEP_REQUIRED[cur] || [];
+  let allDone = true;
+  reqs.forEach(fid => {
+    const filled = checkFieldFilled(fid);
+    setFieldState(fid, filled ? 'f-done' : 'f-pending');
+    if (!filled) allDone = false;
+  });
+  const btn = document.getElementById('btn-next');
+  if (allDone) {
+    btn.classList.remove('btn-pending');
+  } else {
+    btn.classList.add('btn-pending');
+  }
+}
+
+function onField(id) {
+  refreshFieldStates();
+}
+
+function activateStepValidation(step) {
+  const reqs = STEP_REQUIRED[step] || [];
+  reqs.forEach(fid => {
+    const filled = checkFieldFilled(fid);
+    setFieldState(fid, filled ? 'f-done' : 'f-pending');
+  });
+  refreshFieldStates();
+}
+
+// ══ SEGMENTO OUTRO ════════════════════════════
+function onSegmento(sel) {
+  const wrap = document.getElementById('segmento-outro-wrap');
+  wrap.style.display = sel.value === 'Outro' ? 'block' : 'none';
+  refreshFieldStates();
+}
+
+function getSegmentoFinal() {
+  const s = v('segmento');
+  if (s === 'Outro') return v('segmento-outro') || 'Outro';
+  return s;
+}
+
+// ══ CIDADE AUTOCOMPLETE ═══════════════════════
+let allMunicipios = null;
+let acTimer = null;
+
+(async function loadMunicipios() {
+  try {
+    const r = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome');
+    const d = await r.json();
+    allMunicipios = d.map(m => ({
+      nome: m.nome,
+      uf: m.microrregiao?.mesorregiao?.UF?.sigla || ''
+    }));
+  } catch(e) { allMunicipios = []; }
+})();
+
+function onCidadeInput(val) {
+  clearTimeout(acTimer);
+  if (!val || val.length < 2) { closeAc('ac-cidade'); return; }
+  acTimer = setTimeout(() => showCidadeAc(val), 180);
+}
+
+function showCidadeAc(q) {
+  const list = document.getElementById('ac-cidade');
+  if (!allMunicipios) {
+    list.innerHTML = '<div class="ac-loading">Carregando cidades...</div>';
+    list.classList.add('open'); return;
+  }
+  const ql = q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const hits = allMunicipios.filter(m => {
+    const n = m.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    return n.startsWith(ql);
+  }).slice(0,8);
+  if (!hits.length) { closeAc('ac-cidade'); return; }
+  list.innerHTML = hits.map(m =>
+    `<div class="ac-item" onmousedown="pickCidade('${m.nome.replace(/'/g,"\\'")} , ${m.uf}')">
+       <span>${m.nome}</span><span class="ac-uf">${m.uf}</span>
+     </div>`
+  ).join('');
+  list.classList.add('open');
+}
+
+function pickCidade(val) {
+  document.getElementById('cidade').value = val;
+  closeAc('ac-cidade');
+  refreshFieldStates();
+}
+
+function closeAc(id) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('open');
+  }, 150);
+}
+
+// ══ CEP AUTOCOMPLETE ══════════════════════════
+function fmtCep(val) {
+  let d = val.replace(/\D/g,'').slice(0,8);
+  return d.length > 5 ? d.slice(0,5)+'-'+d.slice(5) : d;
+}
+
+async function onCepInput(input) {
+  input.value = fmtCep(input.value);
+  const cep = input.value.replace(/\D/g,'');
+  const st = document.getElementById('cep-status');
+  if (cep.length !== 8) { st.textContent = ''; st.style.color = ''; return; }
+  st.textContent = 'Buscando...'; st.style.color = 'var(--muted2)';
+  try {
+    const r = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const d = await r.json();
+    if (d.erro) { st.textContent = '⚠ CEP não encontrado'; st.style.color='var(--amber)'; return; }
+    const end = [d.logradouro, d.bairro].filter(Boolean).join(', ');
+    if (end) document.getElementById('endereco').value = end;
+    if (d.localidade && d.uf) {
+      const cid = `${d.localidade}, ${d.uf}`;
+      document.getElementById('cidade').value = cid;
+      refreshFieldStates();
+    }
+    st.textContent = `✓ ${d.localidade}, ${d.uf}`;
+    st.style.color = 'var(--green)';
+  } catch(e) { st.textContent = 'Erro ao buscar CEP'; st.style.color='var(--amber)'; }
+}
+
+// ══ SCHEDULE BUILDER ══════════════════════════
+const DAYS = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+let schedGroups = 0;
+
+function fmtTime(t) {
+  if (!t) return '';
+  const [h,m] = t.split(':');
+  return m==='00' ? `${parseInt(h)}h` : `${parseInt(h)}h${m}`;
+}
+
+function daysLabel(days) {
+  const idx = days.map(d => DAYS.indexOf(d)).sort((a,b)=>a-b);
+  const sorted = idx.map(i => DAYS[i]);
+  let consec = idx.length > 2 && idx.every((v,i) => i===0 || v===idx[i-1]+1);
+  if (consec) return `${sorted[0]}–${sorted[sorted.length-1]}`;
+  if (sorted.length===1) return sorted[0];
+  return sorted.join(', ');
+}
+
+function buildSchedText() {
+  const parts = [];
+  document.querySelectorAll('.sched-group').forEach(g => {
+    const days = Array.from(g.querySelectorAll('.sd.active')).map(d => d.dataset.d);
+    if (!days.length) return;
+    const open  = g.querySelector('.shift-open').value;
+    const close = g.querySelector('.shift-close').value;
+    const br    = g.querySelector('.break-row');
+    const hasBr = br && br.style.display !== 'none';
+    let ts;
+    if (hasBr) {
+      const bc = g.querySelector('.break-close').value;
+      const bo = g.querySelector('.break-open').value;
+      ts = `${fmtTime(open)}–${fmtTime(bc)} e ${fmtTime(bo)}–${fmtTime(close)}`;
+    } else {
+      ts = `${fmtTime(open)}–${fmtTime(close)}`;
+    }
+    parts.push(`${daysLabel(days)} ${ts}`);
+  });
+  return parts.join(' | ');
+}
+
+function updateSched() {
+  const txt = buildSchedText();
+  document.getElementById('horarios').value = txt;
+  const prev = document.getElementById('sched-preview');
+  if (txt) {
+    prev.innerHTML = `<strong>Resultado:</strong> ${txt}`;
+    prev.classList.add('visible');
+  } else {
+    prev.classList.remove('visible');
+  }
+  refreshFieldStates();
+}
+
+function addSchedGroup(defaultDays) {
+  const id = 'sg-' + schedGroups++;
+  const wrap = document.getElementById('sched-wrap');
+  const g = document.createElement('div');
+  g.className = 'sched-group'; g.id = id;
+  const activeDays = defaultDays || (schedGroups === 1 ? ['Seg','Ter','Qua','Qui','Sex'] : []);
+  g.innerHTML = `
+    ${schedGroups > 1 ? `<button type="button" class="btn-sched-del" onclick="removeSchedGroup('${id}')">✕</button>` : ''}
+    <div class="sched-days">
+      ${DAYS.map(d => `<button type="button" class="sd${activeDays.includes(d)?' active':''}" data-d="${d}" onclick="toggleDay(this,'${id}')">${d}</button>`).join('')}
+    </div>
+    <div class="sched-shift">
+      <span class="shift-lbl">Abre</span>
+      <input type="time" class="shift-t shift-open" value="08:00" onchange="updateSched()">
+      <span class="shift-lbl">até</span>
+      <input type="time" class="shift-t shift-close" value="18:00" onchange="updateSched()">
+      <button type="button" class="btn-break" onclick="addBreak(this,'${id}')">+ Intervalo</button>
+    </div>
+    <div class="break-row" style="display:none">
+      <span class="shift-lbl">Pausa às</span>
+      <input type="time" class="shift-t break-close" value="12:00" onchange="updateSched()">
+      <span class="shift-lbl">retorna</span>
+      <input type="time" class="shift-t break-open" value="13:00" onchange="updateSched()">
+      <button type="button" class="btn-rm" onclick="removeBreak(this,'${id}')">✕</button>
+    </div>
+  `;
+  wrap.appendChild(g);
+  updateSched();
+}
+
+function toggleDay(btn, gid) {
+  btn.classList.toggle('active');
+  updateSched();
+}
+
+function addBreak(btn, gid) {
+  const g = document.getElementById(gid);
+  g.querySelector('.break-row').style.display = 'flex';
+  btn.style.display = 'none';
+  updateSched();
+}
+
+function removeBreak(btn, gid) {
+  const g = document.getElementById(gid);
+  g.querySelector('.break-row').style.display = 'none';
+  g.querySelector('.btn-break').style.display = '';
+  updateSched();
+}
+
+function removeSchedGroup(gid) {
+  document.getElementById(gid)?.remove();
+  updateSched();
+}
+
+// Init schedule
+addSchedGroup(['Seg','Ter','Qua','Qui','Sex']);
+
+// ── Init
+checkHandoff();
+activateStepValidation(1);
+</script>
+</body>
+</html>
